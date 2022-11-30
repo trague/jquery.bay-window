@@ -4,6 +4,43 @@
  *
  * Licensed under MIT (https://github.com/craftpip/jquery-confirm/blob/master/LICENSE)
  */
+
+// requestAnimationFrame polyfill
+(function () {
+  "use strict";
+
+  // ie <= 8
+  if (!Date.now)
+    Date.now = function () {
+      return new Date().getTime();
+    };
+
+  // ie <= 9
+  var vendors = ["webkit", "moz"];
+  for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
+    var vp = vendors[i];
+    window.requestAnimationFrame = window[vp + "RequestAnimationFrame"];
+    window.cancelAnimationFrame =
+      window[vp + "CancelAnimationFrame"] ||
+      window[vp + "CancelRequestAnimationFrame"];
+  }
+  if (
+    /iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) || // iOS6 is buggy
+    !window.requestAnimationFrame ||
+    !window.cancelAnimationFrame
+  ) {
+    var lastTime = 0;
+    window.requestAnimationFrame = function (callback) {
+      var now = Date.now();
+      var nextTime = Math.max(lastTime + 16, now);
+      return setTimeout(function () {
+        callback((lastTime = nextTime));
+      }, nextTime - now);
+    };
+    window.cancelAnimationFrame = clearTimeout;
+  }
+})();
+
 (function (factory) {
   if (typeof define === "function" && define.amd) {
     // AMD
@@ -17,6 +54,8 @@
   }
 })(function ($) {
   var BAY_WINDOW_DATA_KEY = "bayWindow";
+  // ie <= 9, 是否兼容transform
+  var SUPPORT_TRANSFORM = "transform" in document.documentElement.style;
 
   $.extend({
     /**
@@ -67,16 +106,20 @@
     this.options = $.extend({}, BayWindow.DEFAULTS, options);
     this.isToLeft = false; // 是否向左运动
     this.isToTop = false; // 是否向上运动
-    this.stepLength = 1; // 每次移动距离
+    // this.stepLength = 1; // 每次移动距离
     this.timeoutId; // setTimout返回值
     this.top = this.options.startTop; // css top
     this.left = this.options.startLeft; // css left
+    this.lastTime = 0;
 
     this.$element.css({
       position: "fixed",
-      top: this.top,
-      left: this.left,
+      top: SUPPORT_TRANSFORM ? 0 : this.top,
+      left: SUPPORT_TRANSFORM ? 0 : this.left,
       cursor: "pointer",
+      transform: SUPPORT_TRANSFORM
+        ? "translate(" + this.left + "px," + this.top + "px)"
+        : "",
       zIndex: this.options.zIndex,
     });
 
@@ -84,21 +127,20 @@
   };
 
   BayWindow.DEFAULTS = {
-    speed: 16.7, // 运动间隔时
+    // speed: 16.7, // 运动间隔时
+    stepLength: 1, // 每16.7ms移动的距离
     startTop: 10000, // x轴起始坐标， 默认从底部向上运动
     startLeft: 0, // y轴起始坐标
     zIndex: 10, // css z-index
   };
 
-  BayWindow.prototype._nextStep = function () {
+  BayWindow.prototype._nextStep = function (stepLength) {
+    stepLength = stepLength || 1;
     var winWidth = $(window).width() - this.$element.width() - 10;
     var winHeight = $(window).height() - this.$element.height() - 10;
 
     // 向左运动，要减小left值
-    this.left += (this.isToLeft ? -1 : 1) * this.stepLength;
-    this.$element.css({
-      left: this.left,
-    });
+    this.left += (this.isToLeft ? -1 : 1) * stepLength;
     if (this.left >= winWidth) {
       this.left = winWidth;
       this.isToLeft = true;
@@ -108,10 +150,7 @@
     }
 
     // 向上运动，要减小top值
-    this.top += (this.isToTop ? -1 : 1) * this.stepLength;
-    this.$element.css({
-      top: this.top,
-    });
+    this.top += (this.isToTop ? -1 : 1) * stepLength;
     if (this.top >= winHeight) {
       this.top = winHeight;
       this.isToTop = true;
@@ -119,24 +158,38 @@
       this.top = 0;
       this.isToTop = false;
     }
+    
+    if (SUPPORT_TRANSFORM) {
+      this.$element.css({
+        transform: "translate(" + this.left + "px," + this.top + "px)",
+      });
+    } else {
+      this.$element.css({
+        left: this.left,
+        top: this.top,
+      });
+    }
   };
 
-  BayWindow.prototype.run = function () {
-    this.timeoutId = setInterval(this._nextStep.bind(this), this.options.speed)
+  BayWindow.prototype.run = function (e) {
+    var stepLength = this.options.stepLength;
+    var timeSpace = e - this.lastTime;
+    this.lastTime = e;
 
-    // this.timeoutId = requestAnimationFrame(this.run.bind(this))
-
-    // 重复执行
-    // this.timeoutId = setInterval(this.run.bind(this), this.options.speed);
+    // 小于16，说明是高刷屏，按倍数计算
+    // 大于16，即使大很多，也按16.7计算
+    if (timeSpace && timeSpace < 16) {
+      stepLength = ((timeSpace / 16.7) * stepLength).toFixed(2);
+    }
+    this._nextStep(stepLength);
+    this.timeoutId = requestAnimationFrame(this.run.bind(this));
   };
 
   /**
    * 停止运动
    */
   BayWindow.prototype.stop = function () {
-    // clearTimeout(this.timeoutId);
-    // cancelAnimationFrame(this.timeoutId);
-    clearInterval(this.timeoutId)
+    cancelAnimationFrame(this.timeoutId);
   };
 
   /**

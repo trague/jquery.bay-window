@@ -1,0 +1,24 @@
+{
+  "name": "jquery.baywindow",
+  "version": "0.0.2",
+  "description": "A jquery plugin that adds the floating window function.",
+  "main": "jquery.bayWindow.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trague/jquery.bayWindow.git"
+  },
+  "keywords": [
+    "jquery",
+    "bayWindow",
+    "jquery-plugin"
+  ],
+  "author": "trague",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trague/jquery.bayWindow/issues"
+  },
+  "homepage": "https://github.com/trague/jquery.bayWindow#readme"
+}

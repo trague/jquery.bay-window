@@ -5,12 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jquery.bayWindow example</title>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="./jquery.bayWindow.js"></script>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+
+        .custom {
+            height: 200px;
+            width: 200px;
+            background-color: #f00;
+        }
+    </style>
 </head>
 <body>
+    <h1>default element</h1>
+    <button onclick="show()">create default</button>
+    <button onclick="destroy()">destroy default</button>
+    
+    <h1>custom element</h1>
+    <button onclick="showCustom()">create</button>
+    <button onclick="stopCustom()">stop</button>
+    <button onclick="playCustom()">play</button>
+    <button onclick="destroyCustom()">destroy</button>
+    <div class="custom" id="custom"></div>
+
     <script>
-        
+        var $bayWindow
+        function show() {
+            $bayWindow = $.createBayWindowElement({
+                width: '308px',
+                heigth: '121px',
+                src: './images/bay-image.png'
+            }).bayWindow({
+                startTop: 100000
+            })
+        }
+
+        function destroy() {
+            if ($bayWindow) {
+                $bayWindow.bayWindow('destroy')
+            }
+            $bayWindow = null
+        }
+
+        function showCustom() {
+            $('#custom').bayWindow({})
+        }
+
+        function destroyCustom() {
+            $('#custom').bayWindow('destroy')
+        }
+
+        function playCustom() {
+            $('#custom').bayWindow('run')
+        }
+
+        function stopCustom() {
+            $('#custom').bayWindow('stop')
+        }
     </script>
 </body>
 </html>

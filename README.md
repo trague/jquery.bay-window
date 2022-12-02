@@ -88,7 +88,7 @@ $(element).bayWindow(methodName)
     <tr>
     <td><i>target</i></td>
     <td><i>string</i></td>
-    <td><i>__black</i></td>
+    <td><i>__blank</i></td>
     <td>target attribute of <i>a</i> tag</td>
   </tr>
 </table>

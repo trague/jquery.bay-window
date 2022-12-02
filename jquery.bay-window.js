@@ -1,9 +1,9 @@
 /*!
- * jquery.bayWindow 0.0.3 (https://github.com/trague/jquery.bayWindow)
+ * jquery.bay-window 0.0.4 (https://github.com/trague/jquery.bay-window)
  * Author: Zhao WenZheng
  * Contact: 455147862@qq.com
- * Copyright 2022 jquery.bayWindow
- * Licensed under MIT (https://github.com/trague/jquery.bayWindow/blob/main/LICENSE)
+ * Copyright 2022 jquery.bay-window
+ * Licensed under MIT (https://github.com/trague/jquery.bay-window/blob/main/LICENSE)
  */
 
 ;(function (factory) {

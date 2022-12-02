@@ -1,4 +1,4 @@
-# jquery.bayWindow.js
+# jquery.bay-window.js
 
 A jquery plugin that adds the floating window function.
 
@@ -15,7 +15,7 @@ Use requestAnimationFrame and transform
 Include script _after_ the jQuery library (unless you are packaging scripts somehow else):
 
 ```html
-<script src="/path/to/jquery.bayWindow.js"></script>
+<script src="/path/to/jquery.bay-window.min.js"></script>
 ```
 
 ## Usage

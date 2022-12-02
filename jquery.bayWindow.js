@@ -1,5 +1,5 @@
 /*!
- * jquery.bayWindow 0.0.1 (https://github.com/trague/jquery.bayWindow)
+ * jquery.bayWindow 0.0.3 (https://github.com/trague/jquery.bayWindow)
  * Author: Zhao WenZheng
  * Contact: 455147862@qq.com
  * Copyright 2022 jquery.bayWindow

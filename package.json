@@ -1,6 +1,6 @@
 {
   "name": "jquery.baywindow",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A jquery plugin that adds the floating window function.",
   "main": "jquery.bayWindow.js",
   "scripts": {

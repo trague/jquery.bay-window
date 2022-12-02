@@ -4,7 +4,8 @@
   "description": "A jquery plugin that adds the floating window function.",
   "main": "jquery.bayWindow.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run minify",
+    "minify": "uglifyjs -m -c --comments /Copyright/ -o jquery.bayWindow.min.js -- jquery.bayWindow.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/trague/jquery.bayWindow/issues"
   },
-  "homepage": "https://github.com/trague/jquery.bayWindow#readme"
+  "homepage": "https://github.com/trague/jquery.bayWindow#readme",
+  "devDependencies": {
+    "uglify-js": "^3.17.4"
+  }
 }
